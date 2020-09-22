@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Lookup from './Lookup';
 
 const containerPositionStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  marginTop: '40vh'
+  marginTop: '35vh'
 }
 
 const Container = ({ children }) => (
@@ -30,22 +30,19 @@ const QuestionNumber = ({ n }) => (
 );
 
 function App() {
-  const selectOptions = [{ key: '1', value: 'resposta 1' }, { key: '2', value: 'resposta 2' }];
+  const [selectOptions, setSelectOptions] = useState([]);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(res => res.json())
+      .then(data => setSelectOptions(data.map(d => ({ key: d.id, value: d.name }))));
+  }, []);
 
   return (
     <div style={{ width: '100%', display: 'flex', height: '100vh', justifyContent: 'center' }}>
       <Container>
         <Label><QuestionNumber n={1} /> Pergunta do formulário 1</Label>
-
         <Lookup options={selectOptions} placeholder='Escreve ou seleciona uma opção' />
-        {/* <div>
-        <div>
-          <label>0 de 3 respondidas </label>
-          <ProgressBar></ProgressBar>
-        </div>
-        <Cima /> <Baixo />
-      </div> */}
-
       </Container>
     </div>
   );
